@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ReviewsService.Data;
+using ReviewsService.Services;
+using ReviewsService.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IStatService, StatService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
     
@@ -16,7 +20,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 // миграции
 using (var scope = app.Services.CreateScope())
 {
@@ -25,5 +28,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapControllers();
-
 app.Run();
