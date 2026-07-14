@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ReviewsService.Data;
+using ReviewsService.Middleware;
 using ReviewsService.Services;
 using ReviewsService.Services.Interfaces;
 
@@ -9,8 +10,18 @@ var builder = WebApplication.CreateBuilder();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IStatService, StatService>();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true;
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
     
