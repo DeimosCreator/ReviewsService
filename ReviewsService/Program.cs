@@ -7,15 +7,15 @@ var builder = WebApplication.CreateBuilder();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
     
 var app = builder.Build();
 
 // конвейер
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 // миграции
 using (var scope = app.Services.CreateScope())
